@@ -50,7 +50,7 @@ async function deletarUmCupom(id){
                 detail: 'Dados deletados com sucesso'
             }
         })
-
+ 
     }
     catch (error) {
         return {
