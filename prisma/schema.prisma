@@ -1,15 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -20,7 +14,7 @@ model cupons {
   cupom_status   String    @default("ativo")
   cupom_validade DateTime
   createdAt      DateTime  @default(now())
-  updateAT       DateTime? @updatedAt
+  updatedAt      DateTime?
 }
 
 model categorias {
@@ -29,7 +23,7 @@ model categorias {
   categoria_imagem   String
   categoria_destaque Boolean
   createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
+  updatedAt          DateTime?       @updatedAt
   subcategorias      subcategorias[]
 }
 
@@ -38,17 +32,28 @@ model subcategorias {
   sub_nome     String
   sub_imagem   String
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  updatedAt    DateTime?  @updatedAt
   categoria_id Int
   categoria    categorias @relation(fields: [categoria_id], references: [categoria_id])
+
+  @@index([categoria_id], map: "subcategorias_categoria_id_fkey")
 }
 
 model usuarios {
-  usuario_id    Int      @id @default(autoincrement())
+  usuario_id    Int       @id @default(autoincrement())
   usuario_nome  String
-  usuario_email String   @unique
+  usuario_email String    @unique
   usuario_senha String
-  usuario_tipo  String   @default("cliente")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  usuario_tipo  String    @default("cliente")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+}
+
+model produtos {
+  produto_id     Int       @id @default(autoincrement())
+  produto_nome   String
+  produto_preco  String
+  produto_imagem String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime?
 }
